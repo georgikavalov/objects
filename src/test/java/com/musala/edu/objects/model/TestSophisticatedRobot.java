@@ -53,7 +53,7 @@ public class TestSophisticatedRobot extends KJRTest {
 
 	@Test
 	public void testDrawingSquare() {
-		final int squareSize = new Random().nextInt(STREETS - START_AVENUE);
+		final int squareSize = new Random().nextInt(STREETS - START_STREET - 1);
 		batka.drawSquare(START_STREET + 2, START_AVENUE + 4, squareSize);
 		assertBeepersAt(START_AVENUE + 4, START_STREET + 2);// corner A
 		assertBeepersAt(START_AVENUE + 4, START_STREET + 2 + squareSize);// corner B
