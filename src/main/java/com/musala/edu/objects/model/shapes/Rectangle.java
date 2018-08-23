@@ -1,7 +1,9 @@
-package com.musala.edu.objects.model;
+package com.musala.edu.objects.model.shapes;
+
+import com.musala.edu.objects.model.robots.SophisticatedRobot;
 
 /**
- * The {@code Rectangle} class represents a rectangle shape
+ * The {@code Rectangle} class represents a rectangular shape
  * 
  * @author georgi.kavalov
  *

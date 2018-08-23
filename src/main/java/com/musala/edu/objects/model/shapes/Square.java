@@ -1,4 +1,6 @@
-package com.musala.edu.objects.model;
+package com.musala.edu.objects.model.shapes;
+
+import com.musala.edu.objects.model.robots.SophisticatedRobot;
 
 /**
  * The {@code Square} class represents a square shape

@@ -1,4 +1,4 @@
-package com.musala.edu.objects.model;
+package com.musala.edu.objects.model.robots;
 
 import java.awt.Color;
 import java.util.concurrent.Callable;
@@ -6,6 +6,9 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.musala.edu.objects.model.shapes.Shape;
+
+import kareltherobot.Directions;
 import kareltherobot.Robot;
 
 /**
@@ -17,11 +20,18 @@ import kareltherobot.Robot;
  */
 public class SophisticatedRobot extends Robot {
 
+	private static final int DEFAULT_STREET = 1;
+	private static final int DEFUALT_AVENUE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(SophisticatedRobot.class);
 	private static final int BEEPERS = Integer.MAX_VALUE;
 	private static final int CIRCLE_TURNS = 4;
 	private int currentStreet;
 	private int currentAvenue;
+
+	public SophisticatedRobot() {
+		super(DEFAULT_STREET, DEFUALT_AVENUE, Directions.North, BEEPERS);
+		initPosition(DEFAULT_STREET, DEFUALT_AVENUE);
+	}
 
 	public SophisticatedRobot(int street, int avenue, Direction direction) {
 		super(street, avenue, direction, BEEPERS);

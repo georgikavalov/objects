@@ -1,4 +1,6 @@
-package com.musala.edu.objects.model;
+package com.musala.edu.objects.model.shapes;
+
+import com.musala.edu.objects.model.robots.SophisticatedRobot;
 
 /**
  * The {@code Shape} is an abstract class encapsulating common properties of a

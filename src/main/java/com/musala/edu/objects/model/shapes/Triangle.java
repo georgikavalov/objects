@@ -1,7 +1,9 @@
-package com.musala.edu.objects.model;
+package com.musala.edu.objects.model.shapes;
+
+import com.musala.edu.objects.model.robots.SophisticatedRobot;
 
 /**
- * The {@code Triangle} class represents a triangle shape
+ * The {@code Triangle} class represents a triangular shape
  * 
  * @author georgi.kavalov
  *
