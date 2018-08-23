@@ -38,67 +38,89 @@ public class SophisticatedRobot extends Robot {
 		this.currentAvenue = avenue;
 	}
 
-	/**
-	 * Draws a square using beepers
-	 * 
-	 * @param startStreet
-	 *            Staring point at street coordinate
-	 * @param startAvenue
-	 *            Starting point at avenue coordinate
-	 * @param size
-	 *            Size of a square side
-	 */
-	public void drawSquare(int startStreet, int startAvenue, int size) {
-		goTo(startStreet, startAvenue);
-		LOGGER.info("Drawing a square of {} from {}, {}", size, startStreet, startAvenue);
-		circleCounterClockwise(size, true);
+	public void drawShape(Shape shape) {
+		LOGGER.info("Drawing a {} of {} from {}, {}", shape.getClass().getSimpleName(), shape.getSizeDetailsString(),
+				shape.getStartStreet(), shape.getStartAvenue());
+		shape.draw(this);
 	}
 
 	/**
 	 * Makes robot to go to a position
 	 * 
-	 * @param startStreet
+	 * @param street
 	 *            street coordinate
-	 * @param startAvenue
+	 * @param avenue
 	 *            avenue coordinate
+	 * @param leaveTrail
+	 *            A flag indicating if it is going to leave a trail.
 	 */
-	private void goTo(int startStreet, int startAvenue) {
-		LOGGER.info("Going along to street {}", startStreet);
-		walkEW(startStreet);
-		LOGGER.info("Going across to avenue {}", startAvenue);
-		walkNS(startAvenue);
+	public void goTo(int street, int avenue, boolean leaveTrail) {
+		LOGGER.info("Going along to street {}", street);
+		walkEW(currentStreet - (street - 1), leaveTrail);
+		LOGGER.info("Going across to avenue {}", avenue);
+		walkNS((avenue + 1) - currentAvenue, leaveTrail);
 	}
 
 	/**
-	 * Moves robot upward/downward an avenue
+	 * Makes robot walk in a diagonal NorhtWest to SouthEast or in reverse
 	 * 
-	 * @param destAvenue
-	 *            Coordinate to go to
+	 * @param paces
+	 *            Number of diagonal paces. Sign of integer indicates direction
+	 * @param leaveTrail
+	 *            A flag indicating if it is going to leave a trail.
 	 */
-	private void walkNS(int destAvenue) {
-		int paces = destAvenue - currentAvenue;
+	public void walkNWSE(int paces, boolean leaveTrail) {
+		int forward = paces > 0 ? 1 : -1;
+		for (int i = 0; i < Math.abs(paces); i++) {
+			walkNS(-forward * 1, false);
+			walkEW(-forward * 1, leaveTrail);
+		}
+	}
+
+	/**
+	 * Makes robot walk in a diagonal NorthEast to SouthWest or in reverse
+	 * 
+	 * @param paces
+	 *            Number of diagonal paces. Sign of integer indicates direction
+	 * @param leaveTrail
+	 *            A flag indicating if it is going to leave a trail.
+	 */
+	public void walkNESW(int paces, boolean leaveTrail) {
+		int forward = paces < 0 ? 1 : -1;
+		for (int i = 0; i < Math.abs(paces); i++) {
+			walkNS(forward * 1, false);
+			walkEW(-forward * 1, leaveTrail);
+		}
+	}
+
+	/**
+	 * Moves robot North to South or in reverse
+	 * 
+	 * @param paces
+	 *            Number of vertical paces. Sign indicates direction
+	 */
+	public void walkNS(int paces, boolean leaveTrail) {
 		if (paces > 0) {
 			pointNorth();
-		} else {
+		} else if (paces < 0) {
 			pointSouth();
 		}
-		walk(paces, false);
+		walk(paces, leaveTrail);
 	}
 
 	/**
-	 * Moves robot left/right across streets
+	 * Moves robot East to West or in reverse
 	 * 
-	 * @param destStreet
-	 *            Coordinate to go to
+	 * @param paces
+	 *            Number of horizontal paces. Sign indicates direction
 	 */
-	private void walkEW(int destStreet) {
-		int paces = destStreet - currentStreet;
+	public void walkEW(int paces, boolean leaveTrail) {
 		if (paces > 0) {
-			pointEast();
-		} else {
 			pointWest();
+		} else if (paces < 0) {
+			pointEast();
 		}
-		walk(paces, false);
+		walk(paces, leaveTrail);
 	}
 
 	/**
@@ -111,31 +133,31 @@ public class SophisticatedRobot extends Robot {
 	}
 
 	/**
-	 * Circles counter clockwise.
+	 * Circles counter clockwise around a block.
 	 * 
 	 * @param paces
 	 *            Number of squares to move the robot.
 	 * @param leaveTrail
 	 *            A flag indicating if it is going to leave a trail.
 	 */
-	public void circleCounterClockwise(int paces, boolean leaveTrail) {
-		circleAround(paces, this::turnLeft, leaveTrail);
+	public void circleBlockCounterClockwise(int paces, boolean leaveTrail) {
+		circleBlockAround(paces, this::turnLeft, leaveTrail);
 	}
 
 	/**
-	 * Circles clockwise.
+	 * Circles clockwise around a block.
 	 * 
 	 * @param paces
 	 *            Number of squares to move the robot.
 	 * @param leaveTrail
 	 *            A flag indicating if it is going to leave a trail.
 	 */
-	public void circleClockwise(int paces, boolean leaveTrail) {
-		circleAround(paces, this::turnRight, leaveTrail);
+	public void circleBlockClockwise(int paces, boolean leaveTrail) {
+		circleBlockAround(paces, this::turnRight, leaveTrail);
 	}
 
 	/**
-	 * Circles around in a given direction.
+	 * Circles around a block in a given direction.
 	 * 
 	 * @param paces
 	 *            Number of squares to move the robot.
@@ -145,7 +167,7 @@ public class SophisticatedRobot extends Robot {
 	 *            A flag indicating if it is going to leave a trail.
 	 * 
 	 */
-	private void circleAround(int paces, Runnable turningDireciton, boolean leaveTrail) {
+	private void circleBlockAround(int paces, Runnable turningDireciton, boolean leaveTrail) {
 		pointEast();
 		for (int i = 0; i < CIRCLE_TURNS; i++) {
 			walk(paces, leaveTrail);
